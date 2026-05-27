@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F-CARE - Professional Mental Health Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+        /* Tùy chỉnh thanh cuộn nhỏ gọn */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+
+        /* ─── PAGE TRANSITION EFFECT ─── */
+        .page-content {
+            opacity: 0;
+            transform: translateY(15px);
+            display: none;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .page-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-0 md:p-4 lg:p-6">
+
+    <div class="w-full max-w-7xl bg-white rounded-none md:rounded-[28px] shadow-2xl border border-gray-100 overflow-hidden min-h-[100vh] md:min-h-[820px] flex flex-col md:flex-row">
+        
+        <aside class="w-full md:w-72 bg-[#FFF5EE]/50 border-r border-gray-100 p-6 flex flex-col justify-between">
+            <div>
+                <div onclick="switchPage('home')" class="text-[#FF6600] text-2xl font-black tracking-wider cursor-pointer mb-8 select-none">
+                    F-CARE
+                </div>
+
+                <nav class="space-y-1 overflow-y-auto max-h-[550px] pr-1">
+                    <button onclick="switchPage('home')" id="nav-home" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold text-[#FF6600] bg-white border border-[#FF6600]/10 shadow-sm transition-all duration-200 flex items-center gap-2"><span>🏠</span> <span data-key="m-home">Home</span></button>
+                    <button onclick="switchPage('about')" id="nav-about" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-white hover:text-gray-800 transition-all flex items-center gap-2"><span>✨</span> <span data-key="m-about">About Us</span></button>
+                    <button onclick="switchPage('quiz')" id="nav-quiz" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-white hover:text-gray-800 transition-all flex items-center gap-2"><span>🧠</span> <span data-key="m-quiz">Self-Assessment</span></button>
+                    <button onclick="switchPage('resources')" id="nav-resources" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-white hover:text-gray-800 transition-all flex items-center gap-2"><span>📚</span> <span data-key="m-resources">Resources</span></button>
+                    <button onclick="switchPage('crisis')" id="nav-crisis" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-white hover:text-gray-800 transition-all flex items-center gap-2"><span>🚨</span> <span data-key="m-crisis">Crisis Support</span></button>
+                    <!-- AI Support feature removed -->
+                    <button onclick="switchPage('therapist')" id="nav-therapist" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-white hover:text-gray-800 transition-all flex items-center gap-2"><span>👨‍⚕️</span> <span data-key="m-therapist">Find Therapist</span></button>
+                    <button onclick="switchPage('community')" id="nav-community" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-white hover:text-gray-800 transition-all flex items-center gap-2"><span>👥</span> <span data-key="m-community">Community</span></button>
+                    <button onclick="switchPage('blog')" id="nav-blog" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-white hover:text-gray-800 transition-all flex items-center gap-2"><span>📰</span> <span data-key="m-blog">Blog & News</span></button>
+                    <button onclick="switchPage('faq')" id="nav-faq" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-white hover:text-gray-800 transition-all flex items-center gap-2"><span>❓</span> <span data-key="m-faq">FAQs</span></button>
+                    <button onclick="switchPage('contact')" id="nav-contact" class="nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-white hover:text-gray-800 transition-all flex items-center gap-2"><span>✉️</span> <span data-key="m-contact">Contact</span></button>
+                </nav>
+            </div>
+
+            <div class="flex bg-white p-1 rounded-full border border-gray-100 mt-6 shadow-inner">
+                <button id="btn-eng" onclick="switchLang('eng')" class="flex-1 py-1.5 text-xs font-bold rounded-full transition-all bg-[#FF6600] text-white cursor-pointer">ENG</button>
+                <button id="btn-vie" onclick="switchLang('vie')" class="flex-1 py-1.5 text-xs font-bold rounded-full transition-all text-gray-400 hover:text-gray-700 cursor-pointer">VIE</button>
+            </div>
+        </aside>
+
+        <main class="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto max-h-[100vh] md:max-h-[820px] relative">
+            
+            <div id="page-home" class="page-content active" style="opacity: 1; transform: translateY(0);">
+                <div class="max-w-2xl space-y-6">
+                    <span class="text-xs font-bold text-[#FF6600] uppercase bg-[#FFF5EE] px-3 py-1.5 rounded-full">Mental Wellness Platform</span>
+                    <h1 class="text-gray-900 text-4xl md:text-5xl font-black leading-tight uppercase" data-key="h-title">We are here for you!</h1>
+                    <p class="text-gray-500 text-sm md:text-base leading-relaxed" data-key="h-desc">Chào mừng bạn đến với F-CARE. Không gian an toàn tuyệt đối giúp học sinh chữa lành, nhận diện sớm các dấu hiệu quá tải, giải tỏa áp lực thi cử đồng lứa và kết nối nhanh với các chuyên gia tâm lý đầu ngành.</p>
+                    <div class="bg-gray-50 p-4 border-l-4 border-[#FF6600] rounded-r-xl">
+                        <p class="text-xs font-semibold text-gray-600 italic" data-key="h-quote">"Chăm sóc tâm trí hôm nay là chìa khóa cho mọi bước tiến vượt trội vào ngày mai. Đừng chịu đựng một mình."</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button onclick="switchPage('crisis')" class="px-6 py-3 bg-red-500 text-white text-xs font-bold rounded-full shadow-lg shadow-red-500/20 hover:bg-red-600 transition cursor-pointer" data-key="h-btn1">Get Help Now</button>
+                        <button onclick="switchPage('quiz')" class="px-6 py-3 bg-[#FF6600] text-white text-xs font-bold rounded-full shadow-lg shadow-orange-500/20 hover:bg-[#e05900] transition cursor-pointer" data-key="h-btn2">Self-Check</button>
+                        <button onclick="switchPage('resources')" class="px-6 py-3 bg-gray-900 text-white text-xs font-bold rounded-full hover:bg-black transition cursor-pointer" data-key="h-btn3">Explore Resources</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-about" class="page-content">
+                <h2 class="text-[#FF6600] text-2xl font-black uppercase mb-4" data-key="ab-title">About Us</h2>
+                <div class="grid grid-cols-1 gap-4 text-sm text-gray-600 leading-relaxed font-medium">
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                        <h4 class="font-bold text-gray-800 text-base mb-2">🎯 Our Mission & Vision</h4>
+                        <p data-key="ab-m">F-CARE ra đời với sứ mệnh xây dựng một hệ sinh thái chăm sóc tinh thần toàn diện cho môi trường học đường hiện đại. Chúng tôi mong muốn xóa bỏ định kiến về các vấn đề tâm lý, trang bị cho học sinh kỹ năng quản trị cảm xúc và xây dựng lá chắn vững chắc bảo vệ thế hệ trẻ trước áp lực.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                        <h4 class="font-bold text-gray-800 text-base mb-2">👥 Expert Board & Partners</h4>
+                        <p data-key="ab-team">Đội ngũ F-CARE bao gồm các chuyên gia tâm lý lâm sàng danh tiếng, cố vấn giáo dục học đường cùng sự đồng hành chiến lược từ Viện Nghiên cứu Tâm lý Trẻ em & Học sinh Toàn Cầu.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                        <h4 class="font-bold text-gray-800 text-base mb-2">🛡️ Security & Anonymity Pledge</h4>
+                        <p data-key="ab-p">An toàn của bạn là trách nhiệm lớn nhất của chúng tôi. F-CARE mã hóa đầu cuối hoàn toàn tất cả các cuộc trò chuyện và kết quả bài kiểm tra. Bạn có quyền lựa chọn ẩn danh hoàn toàn mà không sợ bị rò rỉ dữ liệu hoặc phán xét.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-quiz" class="page-content">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-6">
+                    <h2 class="text-gray-800 text-xl font-black uppercase" data-key="q-title">Stress, Anxiety & Depression Test</h2>
+                    <span id="q-progress" class="text-xs font-bold text-[#FF6600] bg-[#FFF5EE] px-3 py-1 rounded-full">Question 1/6</span>
+                </div>
+                <div id="quiz-container" class="bg-gray-50 p-6 rounded-2xl border border-gray-100 min-h-[250px] flex flex-col justify-between">
+                    </div>
+            </div>
+
+            <div id="page-resources" class="page-content">
+                <h2 class="text-[#FF6600] text-2xl font-black uppercase mb-4" data-key="r-title">Educational Resources</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="https://www.medicalnewstoday.com/articles/324417" target="_blank" rel="noopener noreferrer" data-resource-id="r1">
+                    <div class="p-4 bg-gray-50 border border-gray-100 rounded-xl flex items-start gap-3">
+                        <span class="text-2xl">📄</span>
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-800" data-key="r1-t">Kỹ thuật kiểm soát lo âu bằng nhịp thở 4-7-8</h4>
+                            <p class="text-xs text-gray-400 mt-1" data-key="r1-m">Bài viết • 5 phút đọc</p>
+                        </div>
+                    </div>
+                    </a>
+                    <a href="https://dailynorthwestern.com/2026/04/26/campus/mental-health-campus/academic-burnout-is-on-the-rise-in-higher-education-what-can-students-do/" target="_blank" rel="noopener noreferrer" data-resource-id="r2">
+                    <div class="p-4 bg-gray-50 border border-gray-100 rounded-xl flex items-start gap-3">
+                        <span class="text-2xl">🎬</span>
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-800" data-key="r2-t">Hiểu đúng về hội chứng kiệt sức học đường (Academic Burnout)</h4>
+                            <p class="text-xs text-gray-400 mt-1" data-key="r2-m">Video bài giảng • 12 phút</p>
+                        </div>
+                    </div>
+                    </a>        
+                    <a href="https://www.unishanoi.org/about/calendar-news-and-publications/post-default/~board/news/post/what-is-peer-pressure-in-teenagers-and-how-to-handle-it" target="_blank" rel="noopener noreferrer" data-resource-id="r3">
+                    <div class="p-4 bg-gray-50 border border-gray-100 rounded-xl flex items-start gap-3">
+                        <span class="text-2xl">📕</span>
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-800" data-key="r3-t">Sổ tay hướng dẫn vượt qua áp lực đồng lứa (Peer Pressure Handbook)</h4>
+                            <p class="text-xs text-blue-500 font-semibold mt-1">Ebook PDF • Tải xuống miễn phí</p>
+                        </div>
+                    </div>
+                    </a>
+                    <a href="https://www.verywellmind.com/mindfulness-meditation-88369" target="_blank" rel="noopener noreferrer" data-resource-id="r4">
+                    <div class="p-4 bg-gray-50 border border-gray-100 rounded-xl flex items-start gap-3">
+                        <span class="text-2xl">🧘‍♂️</span>
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-800" data-key="r4-t">Liệu pháp Thiền chánh niệm giảm căng thẳng trước kỳ thi</h4>
+                            <p class="text-xs text-gray-400 mt-1" data-key="r4-m">Audio Hướng dẫn • 15 phút</p>
+                        </div>
+                    </div>
+                    </a>
+                    <a href="https://med.stanford.edu/news/all-news/2015/10/among-teens-sleep-deprivation-an-epidemic.html" target="_blank" rel="noopener noreferrer" data-resource-id="r5">
+                    <div class="p-4 bg-gray-50 border border-gray-100 rounded-xl flex items-start gap-3">
+                        <span class="text-2xl">📰</span>
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-800" data-key="r5-t">Mối liên hệ giữa rối loạn giấc ngủ và điểm số sa sút ở thanh thiếu niên</h4>
+                            <p class="text-xs text-gray-400 mt-1" data-key="r5-m">Báo cáo khoa học • 8 phút đọc</p>
+                        </div>
+                    </div>
+                    </a>
+                    <a href="https://vietnamnews.vn/society/1694864/stress-management-and-parental-support-key-to-helping-students-navigate-exam-pressure.html" target="_blank" rel="noopener noreferrer" data-resource-id="r6">
+                    <div class="p-4 bg-gray-50 border border-gray-100 rounded-xl flex items-start gap-3">
+                        <span class="text-2xl">🎥</span>
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-800" data-key="r6-t">Làm thế nào để giao tiếp hiệu quả với cha mẹ về áp lực học tập?</h4>
+                            <p class="text-xs text-gray-400 mt-1" data-key="r6-m">Phim hoạt hình ngắn • 6 phút</p>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+
+            <div id="page-crisis" class="page-content">
+                <div class="bg-red-50 border border-red-200 p-6 rounded-2xl text-red-900 mb-6">
+                    <h2 class="text-xl font-black uppercase mb-2 flex items-center gap-2">⚠️ <span data-key="cr-title">Emergency Crisis Center</span></h2>
+                    <p class="text-sm opacity-90" data-key="cr-desc">Nếu bạn hoặc bạn bè đang trải qua những suy nghĩ cực đoan, tự hại hoặc một cơn hoảng loạn dữ dội (Panic Attack), xin vui lòng dừng lại một nhịp và liên hệ ngay với mạng lưới cứu hộ tinh thần:</p>
+                </div>
+                <div class="mb-6">
+                    <div class="w-full p-6 bg-white border-2 border-red-500 rounded-2xl text-center">
+                        <p class="text-xs text-gray-400 font-bold uppercase" data-key="cr-h1">24/7 Hotline quốc gia</p>
+                        <p class="text-2xl font-black text-red-600 mt-1">1900 1267</p>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-100">
+                    <h4 class="font-bold text-gray-800 text-sm mb-2" data-key="cr-guide-t">Sơ cứu nhanh khi gặp cơn hoảng loạn (Panic Attack):</h4>
+                    <ul class="text-xs text-gray-600 space-y-2 list-disc pl-4 font-medium" id="cr-guide-list">
+                        </ul>
+                </div>
+            </div>
+
+                        <div id="page-chatbot" class="page-content">
+                <div class="flex items-center justify-center h-full">
+                    <div class="text-center">
+                        <svg class="animate-spin h-12 w-12 text-[#FF6600] mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                        </svg>
+                        <p class="text-gray-700 text-lg font-medium">Waiting for AI integration...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-therapist" class="page-content">
+                <h2 class="text-gray-800 text-xl font-black uppercase mb-4" data-key="th-title">Verified Medical & Psychological Experts</h2>
+                <div class="grid grid-cols-1 gap-4" id="therapist-list">
+                    <div class="p-5 bg-gray-50 border border-gray-100 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-base">Dr. Sarah Jenkins</h4>
+                            <p class="text-xs text-[#FF6600] font-bold mt-0.5" data-key="th1-s">Clinical Anxiety Specialist</p>
+                            <p class="text-xs text-gray-400 mt-1" data-key="th1-d">Hơn 12 năm kinh nghiệm trị liệu trầm cảm và lo âu học đường tại Đại học Melbourne.</p>
+                        </div>
+                        <button class="bg-[#FF6600] text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer whitespace-nowrap" data-key="th-btn">Book Online Appointment</button>
+                    </div>
+                    <div class="p-5 bg-gray-50 border border-gray-100 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-base">PGS. TS. Nguyễn Văn Mai</h4>
+                            <p class="text-xs text-[#FF6600] font-bold mt-0.5" data-key="th2-s">Chuyên gia Tâm lý Giáo dục Học đường</p>
+                            <p class="text-xs text-gray-400 mt-1" data-key="th2-d">Nguyên trưởng khoa Tâm lý học hành vi, chuyên sâu xử lý khủng hoảng tuổi dậy thì và áp lực thi cử lớn.</p>
+                        </div>
+                        <button class="bg-[#FF6600] text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer whitespace-nowrap" data-key="th-btn">Book Online Appointment</button>
+                    </div>
+                    <div class="p-5 bg-gray-50 border border-gray-100 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-base">ThS. Tâm lý Lê Minh Thư</h4>
+                            <p class="text-xs text-[#FF6600] font-bold mt-0.5" data-key="th3-s">Chuyên gia Tư vấn Liệu pháp Nhận thức Hành vi (CBT)</p>
+                            <p class="text-xs text-gray-400 mt-1" data-key="th3-d">Cố vấn chuyên môn cấp cao, có kinh nghiệm điều trị hơn 500 ca kiệt sức, mất phương hướng chọn ngành học.</p>
+                        </div>
+                        <button class="bg-[#FF6600] text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer whitespace-nowrap" data-key="th-btn">Book Online Appointment</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-community" class="page-content">
+                <h2 class="text-gray-800 text-xl font-black uppercase mb-2" data-key="co-title">Anonymous Community Spaces</h2>
+                <p class="text-gray-400 text-xs mb-4" data-key="co-sub">Nơi bạn trút bỏ gánh nặng lòng mình một cách an toàn. Hãy tôn trọng và nâng đỡ nhau.</p>
+                <div class="space-y-4">
+                    <div class="bg-gray-50 border border-gray-100 p-4 rounded-2xl">
+                        <div class="flex items-center gap-2 text-[11px] font-bold text-gray-400 mb-2">
+                            <span>👤 Student #9283</span> • <span>2 hours ago</span>
+                        </div>
+                        <p class="text-xs text-gray-700 font-medium leading-relaxed" data-key="co-p1">Mình vừa trượt bài kiểm tra chuyên ngành, thực sự áp lực từ kỳ vọng của gia đình lớn quá khiến mình ngộp thở, mất ngủ liên tục 3 ngày nay rồi. Có ai cùng chung cảm giác sợ hãi mỗi khi bước chân vào lớp học không?</p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-100 p-4 rounded-2xl">
+                        <div class="flex items-center gap-2 text-[11px] font-bold text-gray-400 mb-2">
+                            <span>👤 Student #1042</span> • <span>5 hours ago</span>
+                        </div>
+                        <p class="text-xs text-gray-700 font-medium leading-relaxed" data-key="co-p2">Nhìn bạn bè xung quanh ai cũng có giải thưởng, đi thực tập sớm, mình thấy bản thân vô dụng kinh khủng. Hội chứng Peer Pressure này đang gặm nhấm mình từng ngày...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-blog" class="page-content">
+                <h2 class="text-gray-800 text-xl font-black uppercase mb-4" data-key="bl-title">Latest Mental Health Insights</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <a href="https://www.uopeople.edu/blog/sleep-deprivation-in-college-students-how-to-cope/?utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer" data-blog-id="bl1">
+                    <div class="bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden flex flex-col justify-between">
+                        <div class="h-32 bg-orange-100 flex items-center justify-center text-4xl">💤</div>
+                        <div class="p-4">
+                            <h4 class="font-bold text-gray-800 text-sm" data-key="bl1-t">Tác hại khôn lường của việc thiếu ngủ đến bộ não mùa thi cử</h4>
+                            <p class="text-[11px] text-gray-400 mt-2" data-key="bl1-d">Dữ liệu y học chứng minh thức đêm không giúp bạn giỏi hơn, nó chỉ làm gia tăng gấp ba tỷ lệ hoảng loạn lo âu.</p>
+                        </div>
+                    </div>
+                    </a>
+                    <a href="https://www.verywellhealth.com/perfectionism-5323816?utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer" data-blog-id="bl2">
+                    <div class="bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden flex flex-col justify-between">
+                        <div class="h-32 bg-blue-100 flex items-center justify-center text-4xl">🎯</div>
+                        <div class="p-4">
+                            <h4 class="font-bold text-gray-800 text-sm" data-key="bl2-t">Chủ nghĩa hoàn hảo (Perfectionism) - Con dao hai lưỡi bóp nghẹt học sinh</h4>
+                            <p class="text-[11px] text-gray-400 mt-2" data-key="bl2-d">Học cách chấp nhận những điểm không hoàn hảo của bản thân là bước đi đầu tiên để đạt được hạnh phúc đích thực.</p>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+
+            <div id="page-faq" class="page-content">
+                <h2 class="text-gray-800 text-xl font-black uppercase mb-4" data-key="m-faq">Frequently Asked Questions</h2>
+                <div class="space-y-3" id="faq-list">
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <h4 class="font-bold text-gray-800 text-xs md:text-sm mb-1" data-key="fq1-q">F-CARE có thu phí dịch vụ không?</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed" data-key="fq1-a">Hoàn toàn không. Dự án hoạt động 100% phi lợi nhuận vì sứ mệnh bảo vệ và nâng cao sức khỏe tinh thần cho cộng đồng học sinh, sinh viên.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <h4 class="font-bold text-gray-800 text-xs md:text-sm mb-1" data-key="fq2-q">Khi nào tôi biết mình thực sự cần phải đi gặp chuyên gia tâm lý?</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed" data-key="fq2-a">Khi các trạng thái u uất, chán chường, mất ngủ hoặc hoảng loạn kéo dài liên tục trên 2 tuần và bắt đầu can thiệp trực tiếp làm giảm sút kết quả học tập nghiêm trọng.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                        <h4 class="font-bold text-gray-800 text-xs md:text-sm mb-1" data-key="fq3-q">Thông tin cá nhân của tôi khi gửi về hệ thống có bị nhà trường biết không?</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed" data-key="fq3-a">Không. Hệ thống hoạt động độc lập, không lưu vết IP và áp dụng cơ chế xóa dữ liệu tự động sau khi tư vấn để bảo vệ quyền riêng tư tuyệt đối của học sinh.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-contact" class="page-content">
+    <h2 class="text-gray-800 text-xl font-black uppercase mb-4" data-key="ct-title">Leave Your Message</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <form action="https://your-backend.com/contact" method="POST" class="lg:col-span-7 space-y-3 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+            <input type="email" name="email" placeholder="Your Email address" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs outline-none focus:border-[#FF6600]" required>
+            <textarea name="message" rows="4" placeholder="Share your feedback, struggles or questions here..." class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs outline-none focus:border-[#FF6600]" required></textarea>
+            <button type="submit" class="w-full bg-[#FF6600] text-white font-bold text-xs py-3 rounded-xl shadow-lg shadow-orange-500/10 cursor-pointer hover:bg-[#e05900] transition">Submit Message</button>
+        </form>
+        <div class="lg:col-span-5 bg-[#FFF5EE]/60 border border-[#FF6600]/10 p-5 rounded-2xl text-xs space-y-3 text-gray-600 font-medium">
+            <p class="font-bold text-gray-800 text-sm">💡 Quick Support Info</p>
+            <p data-key="ct-i1">Mọi hòm thư góp ý hoặc câu hỏi chuyên sâu sẽ được bộ phận điều phối của F-CARE phản hồi trong vòng tối đa 24 giờ làm việc.</p>
+            <p data-key="ct-i2">Nếu tình trạng mang tính chất cấp bách, xin vui lòng ưu tiên gọi cổng tổng đài khẩn cấp ở mục Crisis Support.</p>
+        </div>
+    </div>
+</div>
+
+        </main>
+    </div>
+
+    <script>
+        let currentLang = 'eng';
+        let currentQ = 0;
+        let score = 0;
+
+        const quizData = [
+            { eng: "1. Do you experience regular insomnia or restless sleep due to grade pressures?", vie: "1. Bạn có thường xuyên bị mất ngủ hoặc ngủ không sâu giấc vì lo lắng chuyện điểm số không?", ops: { eng: ["Never", "Sometimes", "Almost every night"], vie: ["Chưa từng", "Thỉnh thoảng", "Gần như mỗi đêm"] } },
+            { eng: "2. Do you have a tendency to isolate yourself from friends, peers, and family?", vie: "2. Bạn có xu hướng tự cô lập, né tránh giao tiếp với bạn bè hoặc gia đình không?", ops: { eng: ["Not at all", "Slightly", "Severely khép kín"], vie: ["Không hề", "Hơi có xu hướng", "Rất khép kín"] } },
+            { eng: "3. Are you losing all interest or motivation for school activities and personal hobbies?", vie: "3. Bạn có đang mất sạch động lực hay hứng thú với việc học và các đam mê cũ không?", ops: { eng: ["No change", "A little bit", "Completely lost"], vie: ["Vẫn bình thường", "Mất một chút", "Hoàn toàn sa sút"] } },
+            { eng: "4. Do you frequently feel heart palpitations, shortness of breath, or sudden panic at school?", vie: "4. Bạn có hay bị hồi hộp, tim đập nhanh hụt hơi hoặc hoảng loạn đột ngột khi ở trường không?", ops: { eng: ["Never", "Occasional", "Frequent"], vie: ["Không bao giờ", "Thỉnh thoảng", "Rất thường xuyên"] } },
+            { eng: "5. Do you feel intensely frustrated, angry, or emotional over small academic obstacles?", vie: "5. Bạn có dễ bực dọc, cáu gắt hoặc bật khóc chỉ vì những sự cố nhỏ trong học tập không?", ops: { eng: ["Stable", "Mildly sensitive", "Highly reactive"], vie: ["Kiểm soát tốt", "Hơi nhạy cảm", "Rất dễ bùng nổ"] } },
+            { eng: "6. Do you doubt your own values and fear that you are lagging far behind your classmates?", vie: "6. Bạn có liên tục nghi ngờ giá trị bản thân và sợ hãi rằng mình đang tụt hậu xa so với bạn bè?", ops: { eng: ["Confident", "Sometimes doubt", "Constant fear"], vie: ["Tự tin", "Đôi khi lo sợ", "Luôn ám ảnh"] } }
+        ];
+
+        const resourceLinks = {
+            eng: {
+                r1: "https://www.medicalnewstoday.com/articles/324417",
+                r2: "https://dailynorthwestern.com/2026/04/26/campus/mental-health-campus/academic-burnout-is-on-the-rise-in-higher-education-what-can-students-do/",
+                r3: "https://www.unishanoi.org/about/calendar-news-and-publications/post-default/~board/news/post/what-is-peer-pressure-in-teenagers-and-how-to-handle-it",
+                r4: "https://www.verywellmind.com/mindfulness-meditation-88369",
+                r5: "https://med.stanford.edu/news/all-news/2015/10/among-teens-sleep-deprivation-an-epidemic.html",
+                r6: "https://vietnamnews.vn/society/1694864/stress-management-and-parental-support-key-to-helping-students-navigate-exam-pressure.html"
+            },
+            vie: {
+                r1: "https://vnexpress.net/4-bai-tap-tho-giam-chung-lo-au-4590623.html",
+                r2: "https://tamly.com.vn/burn-out-trong-hoc-tap-14718.html",
+                r3: "https://ocde.us/EducationalServices/StudentInitiativesPartnershipsAndEvents/ATOD/TobaccoUsePrevention/Documents/Translated-Documents/L5-PeerPressure-VI.pdf",
+                r4: "https://tapchitamlyhocvietnam.com/vn/so-hien-tai/ung-dung-quan-niem-hoi-tho-cua-lieu-phap",
+                r5: "https://vnexpress.net/4-cach-ngu-nhanh-trong-hai-phut-4636810.html",
+                r6: "https://theolympiaschools.edu.vn/ap-luc-hoc-tap-tu-cha-me"
+            }
+        };
+
+        const blogLinks = {
+            eng: {
+                bl1: "https://www.uopeople.edu/blog/sleep-deprivation-in-college-students-how-to-cope/?utm_source=chatgpt.com",
+                bl2: "https://www.verywellhealth.com/perfectionism-5323816?utm_source=chatgpt.com"
+            },
+            vie: {
+                bl1: "https://www.vinmec.com/vie/bai-viet/tac-hai-khi-tre-em-ngu-khong-du-giac-vi",
+                bl2: "https://www.vinmec.com/vie/bai-viet/chu-nghia-hoan-hao-6-hau-qua-can-luu-y-vi"
+            }
+        };
+
+        const dict = {
+            eng: {
+                "m-home": "Home", "m-about": "About Us", "m-quiz": "Self-Assessment", "m-resources": "Resources", "m-crisis": "Crisis Support", "m-bot": "AI Support", "m-therapist": "Find Therapist", "m-community": "Community", "m-blog": "Blog & News", "m-faq": "FAQs", "m-contact": "Contact",
+                "h-title": "We are here for you!", "h-desc": "Welcome to F-CARE. An absolute safe environment to heal, express student mental vulnerabilities, demystify peer pressure, and connect smoothly with world-class psychological support frameworks.",
+                "h-quote": "\"Caring for your mind today is the golden key to your brilliant leaps tomorrow. You are never destined to carry it alone.\"",
+                "h-btn1": "Get Help Now", "h-btn2": "Self-Check", "h-btn3": "Explore Resources",
+                "ab-title": "About Our Platform", 
+                "ab-m": "F-CARE was founded with the core mission to build a holistic mental wellness ecosystem within modern school environments. We aim to demolish social stigmas around mental vulnerability, equip young minds with robust emotional self-regulation, and construct resilient defenses against academic burnout.",
+                "ab-team": "Our ecosystem consists of dedicated clinical psychologists, school guidance experts, and specialized technical architects operating in strategic partnership with the International Institute of Adolescent Mental Research.",
+                "ab-p": "Identity Encryption Pledge: Your safety is our highest priority. F-CARE enforces strict end-to-end anonymity across all counseling logs and self-checks. You possess full rights to browse anonymously without any fear of exposure or prejudice.",
+                "q-title": "Anxiety, Stress & Burnout Clinical Test",
+                "r-title": "Deep Mental Health Resources Hub",
+                "r1-t": "The 4-7-8 Breathing Technique: Master Anxiety Control", "r1-m": "Article • 5 mins read",
+                "r2-t": "Demystifying Academic Burnout: Signs & Immediate Recovery", "r2-m": "Video Course • 12 mins",
+                "r3-t": "The Student Peer Pressure Survival Handbook (PDF Edition)",
+                "r4-t": "Mindfulness Meditation Practice for Exam Stress Reduction", "r4-m": "Audio Track • 15 mins",
+                "r5-t": "The Direct Correlation Between Sleep Deprivation and Adolescent Academic Declines", "r5-m": "Scientific Paper • 8 mins read",
+                "r6-t": "Effective Communication Strategies with Parents Regarding High Academic Expectations", "r6-m": "Animated Short • 6 mins",
+                "cr-title": "Emergency Crisis Assistance Hub", 
+                "cr-desc": "If you or your peers are navigating extreme mental blockages, self-harm impulses, or active panic attacks, please freeze for a second and instantly link into our urgent safety nets:",
+                "cr-h1": "24/7 National Emergency Line",
+                "cr-guide-t": "Immediate First-Aid Guidelines for active Panic Attacks:",
+                "cb-sub": "Note: Virtual Assistant operates on zero-identity logs. Built for real-time emotional cooling. Not a medical prescription alternative.",
+                "cb-greet": "Hello there! I am your F-CARE anonymous AI wellness mentor. What kind of academic heaviness or stress is burdening your mind today? Everything shared here remains completely in the shadows.",
+                "th-title": "Verified Medical & Psychological Experts",
+                "th1-s": "Clinical Anxiety Specialist", "th1-d": "12+ years treating student depressive disorders and school panic stresses at the University of Melbourne.",
+                "th2-s": "School Educational Psychology Professor", "th2-d": "Former Chair of Behavioral Psychology, specializing in adolescent developmental crisis and high-stake exam stress mitigations.",
+                "th3-s": "Cognitive Behavioral Therapy (CBT) Counselor", "th3-d": "Senior consulting expert with clinical records of guiding over 500 cases of burnout and academic identity confusion.",
+                "th-btn": "Book Online Appointment",
+                "co-title": "Anonymous Student Forum Board", "co-sub": "A safe harbor to drop your internal weights. Zero judgments allowed. Please speak with empathy.",
+                "co-p1": "I just flunked my core exam. The weight of family expectations feels like an iron brick crushing my chest. Haven't slept a wink for 3 straight days. Does anyone else get terrifying dread just walking near the school gates?",
+                "co-p2": "Looking around me, every classmate seems to be swimming in medals and locking early internships. I feel fundamentally defective. This peer pressure beast is hollowing me out day by day...",
+                "bl-title": "Scientific Psychological Publications",
+                "bl1-t": "The Dangerous Feedback Loop of Sleep Loss on Examination Anxiety", "bl1-d": "Clinical data establishes that pulling all-nighters never boosts scores; it merely scales up cognitive panics by 300%.",
+                "bl2-t": "Maladaptive Perfectionism: The Invisible Noose Suffocating Modern Students", "bl2-d": "Learning to reconcile with your unpolished imperfections is the actual foundational milestone toward authentic resilience.",
+                "fq1-q": "Does F-CARE charge any consulting service fees?", "fq1-a": "Absolutely not. The platform operates 100% non-profit, funded entirely to protect and promote mental wellness across global student bodies.",
+                "fq2-q": "When should I officially consider booking an expert psychological counselor?", "fq2-a": "When profound sadness, demotivation, severe insomnia, or acute anxieties span over 2 consecutive weeks and directly impair your daily life.",
+                "fq3-q": "Can my school or teachers access my diagnostic answers or identity data?", "fq3-a": "No. The system functions on an isolated database, enforces zero IP tracking, and triggers routine automatic log wipes to shield user privacy.",
+                "ct-title": "Drop Us An Editorial Inquiry", "ct-i1": "All feedback loops or custom analytical inquiries will be evaluated and responded to by F-CARE staff within 24 working hours max.",
+                "ct-i2": "If your situation carries urgent risk profiles, please bypass forms and immediately utilize the direct hotlines inside Crisis Support."
+            },
+            vie: {
+                "m-home": "Trang Chủ", "m-about": "Về Chúng Tôi", "m-quiz": "Kiểm Tra Sức Khỏe", "m-resources": "Tài Nguyên", "m-crisis": "Hỗ Trợ Khẩn Cấp", "m-bot": "Trợ Lý AI", "m-therapist": "Tìm Chuyên Gia", "m-community": "Cộng Đồng", "m-blog": "Blog & Tin Tức", "m-faq": "Hỏi Đáp FAQs", "m-contact": "Liên Hệ",
+                "h-title": "Chúng tôi ở đây vì bạn!", "h-desc": "Chào mừng bạn đến với F-CARE. Không gian an toàn tuyệt đối giúp học sinh chữa lành, nhận diện sớm các dấu hiệu quá tải, giải tỏa áp lực thi cử đồng lứa và kết nối nhanh với các chuyên gia tâm lý đầu ngành.",
+                "h-quote": "\"Chăm sóc tâm trí hôm nay là chìa khóa cho mọi bước tiến vượt trội vào ngày mai. Đừng chịu đựng một mình.\"",
+                "h-btn1": "Nhận Trợ Giúp Ngay", "h-btn2": "Kiểm Tra Sức Khỏe", "h-btn3": "Khám Phá Tài Nguyên",
+                "ab-title": "Về Hệ Thống Của Chúng Tôi", 
+                "ab-m": "F-CARE ra đời với sứ mệnh xây dựng một hệ sinh thái chăm sóc tinh thần toàn diện cho môi trường học đường hiện đại. Chúng tôi mong muốn xóa bỏ định kiến về các vấn đề tâm lý, trang bị cho học sinh kỹ năng quản trị cảm xúc và xây dựng lá chắn vững chắc bảo vệ thế hệ trẻ trước áp lực.",
+                "ab-team": "Đội ngũ F-CARE bao gồm các chuyên gia tâm lý lâm sàng danh tiếng, cố vấn giáo dục học đường cùng sự đồng hành chiến lược từ Viện Nghiên cứu Tâm lý Trẻ em & Học sinh Toàn Cầu.",
+                "ab-p": "Cam kết bảo mật danh tính: An toàn của bạn là trách nhiệm lớn nhất của chúng tôi. F-CARE mã hóa đầu cuối hoàn toàn tất cả các cuộc trò chuyện và kết quả bài kiểm tra. Bạn có quyền lựa chọn ẩn danh hoàn toàn mà không sợ bị rò rỉ dữ liệu hoặc phán xét.",
+                "q-title": "Đánh giá Lâm sàng: Stress, Lo âu & Kiệt sức",
+                "r-title": "Kho Tài Nguyên Giáo Dục Tâm Lý",
+                "r1-t": "Kỹ thuật kiểm soát lo âu bằng nhịp thở 4-7-8", "r1-m": "Bài viết • 5 phút đọc",
+                "r2-t": "Hiểu đúng về hội chứng kiệt sức học đường (Academic Burnout)", "r2-m": "Video bài giảng • 12 phút",
+                "r3-t": "Sổ tay hướng dẫn vượt qua áp lực đồng lứa (Peer Pressure Handbook)",
+                "r4-t": "Liệu pháp Thiền chánh niệm giảm căng thẳng trước kỳ thi", "r4-m": "Audio Hướng dẫn • 15 phút",
+                "r5-t": "Mối liên hệ giữa rối loạn giấc ngủ và điểm số sa sút ở thanh thiếu niên", "r5-m": "Báo cáo khoa học • 8 phút đọc",
+                "r6-t": "Làm thế nào để giao tiếp hiệu quả với cha mẹ về áp lực học tập?", "r6-m": "Phim hoạt hình ngắn • 6 phút",
+                "cr-title": "Trung Tâm Hỗ Trợ Khủng Hoảng",
+                "cr-desc": "Nếu bạn hoặc bạn bè đang trải qua những suy nghĩ cực đoan, tự hại hoặc một cơn hoảng loạn dữ dội (Panic Attack), xin vui lòng dừng lại một nhịp và liên hệ ngay với mạng lưới cứu hộ tinh thần:",
+                "cr-h1": "Đường dây nóng Cứu hộ Quốc gia 24/7",
+                "cr-guide-t": "Quy trình Sơ cứu nhanh khi đối mặt với cơn Hoảng loạn (Panic Attack):",
+                "cb-sub": "Lưu ý: Trợ lý ảo được bảo mật danh tính, giúp hỗ trợ xử lý cảm xúc tức thì. Không thay thế chẩn đoán y khoa.",
+                "cb-greet": "Chào bạn! Mình là AI hỗ trợ tâm lý học đường của F-CARE. Hãy chia sẻ bất kỳ nỗi lo lắng hay áp lực nào bạn đang giữ trong lòng nhé, mọi lời nói ở đây đều là bí mật ẩn danh.",
+                "th-title": "Đội Ngũ Chuyên Gia Kiểm Định Y Khoa",
+                "th1-s": "Chuyên gia Trị liệu Lo âu Lâm sàng", "th1-d": "Hơn 12 năm kinh nghiệm điều trị rối loạn trầm cảm và áp lực tâm lý học đường tại Đại học Melbourne.",
+                "th2-s": "PGS. TS. Giáo dục Học đường", "th2-d": "Nguyên trưởng khoa Tâm lý học hành vi, chuyên sâu xử lý các cuộc khủng hoảng tuổi dậy thì và áp lực thi cử lớn.",
+                "th3-s": "ThS. Trị liệu Nhận thức Hành vi (CBT)", "th3-d": "Cố vấn chuyên môn cấp cao, sở hữu hồ sơ điều trị hơn 500 ca kiệt sức và mất định hướng căn tính học tập.",
+                "th-btn": "Đặt Lịch Tư Vấn Online",
+                "co-title": "Diễn Đàn Học Sinh Ẩn Danh", "co-sub": "Nơi bạn trút bỏ gánh nặng lòng mình một cách an toàn. Hãy tôn trọng và nâng đỡ nhau.",
+                "co-p1": "Mình vừa trượt bài kiểm tra chuyên ngành, thực sự áp lực từ kỳ vọng của gia đình lớn quá khiến mình ngộp thở, mất ngủ liên tục 3 ngày nay rồi. Có ai cùng chung cảm giác sợ hãi mỗi khi bước chân vào lớp học không?",
+                "co-p2": "Nhìn bạn bè xung quanh ai cũng có giải thưởng, đi thực tập sớm, mình thấy bản thân vô dụng kinh khủng. Hội chứng Peer Pressure này đang gặm nhấm mình từng ngày...",
+                "bl-title": "Ấn Bản Nghiên Cứu Tâm Lý Học Đường",
+                "bl1-t": "Tác hại khôn lường của việc thiếu ngủ đến bộ não mùa thi cử", "bl1-d": "Dữ liệu y học chứng minh thức đêm không giúp bạn giỏi hơn, nó chỉ làm gia tăng gấp ba tỷ lệ hoảng loạn lo âu.",
+                "bl2-t": "Chủ nghĩa hoàn hảo (Perfectionism) - Con dao hai lưỡi bóp nghẹt học sinh", "bl2-d": "Học cách chấp nhận những điểm không hoàn hảo của bản thân là bước đi đầu tiên để đạt được hạnh phúc đích thực.",
+                "fq1-q": "F-CARE có thu phí dịch vụ không?", "fq1-a": "Hoàn toàn không. Dự án hoạt động 100% phi lợi nhuận vì sứ mệnh bảo vệ và nâng cao sức khỏe tinh thần cho cộng đồng học sinh, sinh viên.",
+                "fq2-q": "Khi nào tôi biết mình thực sự cần phải đi gặp chuyên gia tâm lý?", "fq2-a": "Khi các trạng thái u uất, chán chường, mất ngủ hoặc hoảng loạn kéo dài liên tục trên 2 tuần và bắt đầu can thiệp trực tiếp làm giảm sút kết quả học tập nghiêm trọng.",
+                "fq3-q": "Thông tin cá nhân của tôi khi gửi về hệ thống có bị nhà trường biết không?", "fq3-a": "Không. Hệ thống hoạt động độc lập, không lưu vết IP và áp dụng cơ chế xóa dữ liệu tự động sau khi tư vấn để bảo vệ quyền riêng tư tuyệt đối của học sinh.",
+                "ct-title": "Gửi Thắc Mắc Cho Chúng Tôi", "ct-i1": "Mọi hòm thư góp ý hoặc câu hỏi chuyên sâu sẽ được bộ phận điều phối của F-CARE phản hồi trong vòng tối đa 24 giờ làm việc.",
+                "ct-i2": "Nếu tình trạng mang tính chất cấp bách, xin vui lòng ưu tiên gọi cổng tổng đài khẩn cấp ở mục Crisis Support."
+            }
+        };
+
+        const crisisGuides = {
+            eng: [
+                "Apply the 5-4-3-2-1 Grounding Method: Name 5 things you can see, 4 things you can touch, 3 things you hear, 2 things you smell, and 1 thing you taste.",
+                "Elongate your breathing: Inhale slowly through your nose for 4 seconds, hold for 4, and exhale fully through your mouth for 6 seconds.",
+                "Remind yourself safely: This panic is an intense wave of adrenaline, but it is temporary and it WILL pass safely."
+            ],
+            vie: [
+                "Áp dụng quy tắc neo giữ thực tại 5-4-3-2-1: Nhìn nhận 5 thứ xung quanh, chạm vào 4 vật thể, nghe 3 âm thanh, ngửi 2 mùi và cảm nhận 1 vị.",
+                "Kéo dài hơi thở: Hít vào sâu qua mũi 4 giây, giữ lại 4 giây và thở ra nhẹ nhàng bằng miệng kéo dài trong 6 giây.",
+                "Tự trấn an bản thân: Cơn hoảng loạn này chỉ là một phản ứng adrenaline quá mức, nó vô hại và CHẮC CHẮN sẽ qua đi sau vài phút."
+            ]
+        };
+
+        // KHỞI CHẠY NGAY LẬP TỨC KHÔNG QUA MÀN HÌNH CHỜ
+        window.addEventListener('DOMContentLoaded', () => {
+            renderQuiz();
+            renderCrisisGuides();
+            updateResourceLinks();
+            updateBlogLinks();
+        });
+
+        // HÀM CHUYỂN TRANG MƯỢT MÀ (PAGE-TO-PAGE TRANSITION)
+        function switchPage(pageId) {
+            const currentActive = document.querySelector('.page-content.active');
+            if(currentActive && currentActive.id === `page-${pageId}`) return;
+
+            if(currentActive) {
+                currentActive.style.opacity = '0';
+                currentActive.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    currentActive.classList.remove('active');
+                    triggerFadeIn(pageId);
+                }, 220);
+            } else {
+                triggerFadeIn(pageId);
+            }
+
+            // Đồng bộ màu sắc nút thanh Sidebar
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-white hover:text-gray-800 transition-all flex items-center gap-2";
+            });
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            if(activeNav) activeNav.className = "nav-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold text-[#FF6600] bg-white border border-[#FF6600]/10 shadow-sm transition-all duration-200 flex items-center gap-2";
+        }
+
+        function triggerFadeIn(pageId) {
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if(targetPage) {
+                targetPage.classList.add('active');
+                setTimeout(() => {
+                    targetPage.style.opacity = '1';
+                    targetPage.style.transform = 'translateY(0)';
+                }, 50);
+            }
+        }
+
+        // ĐỔI NGÔN NGỮ ĐỒNG BỘ
+        function switchLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if(dict[lang][key]) el.innerHTML = dict[lang][key];
+            });
+
+            const btnEng = document.getElementById('btn-eng');
+            const btnVie = document.getElementById('btn-vie');
+            if (lang === 'eng') {
+                btnEng.className = "flex-1 py-1.5 text-xs font-bold rounded-full transition-all bg-[#FF6600] text-white cursor-pointer";
+                btnVie.className = "flex-1 py-1.5 text-xs font-bold rounded-full transition-all text-gray-400 hover:text-gray-700 cursor-pointer";
+            } else {
+                btnVie.className = "flex-1 py-1.5 text-xs font-bold rounded-full transition-all bg-[#FF6600] text-white cursor-pointer";
+                btnEng.className = "flex-1 py-1.5 text-xs font-bold rounded-full transition-all text-gray-400 hover:text-gray-700 cursor-pointer";
+            }
+            renderQuiz();
+            renderCrisisGuides();
+            updateResourceLinks();
+            updateBlogLinks();
+        }
+
+        function updateResourceLinks() {
+            document.querySelectorAll('[data-resource-id]').forEach(link => {
+                const resourceId = link.getAttribute('data-resource-id');
+                const localizedUrl = resourceLinks[currentLang][resourceId];
+                if(localizedUrl) link.href = localizedUrl;
+            });
+        }
+
+        function updateBlogLinks() {
+            document.querySelectorAll('[data-blog-id]').forEach(link => {
+                const blogId = link.getAttribute('data-blog-id');
+                const localizedUrl = blogLinks[currentLang][blogId];
+                if(localizedUrl) link.href = localizedUrl;
+            });
+        }
+
+        function renderCrisisGuides() {
+            const listContainer = document.getElementById('cr-guide-list');
+            if(listContainer) {
+                listContainer.innerHTML = crisisGuides[currentLang].map(text => `<li>${text}</li>`).join('');
+            }
+        }
+
+        // LOGIC CHẠY BÀI TEST 6 CÂU HỎI
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            if (currentQ >= quizData.length) {
+                let report = "";
+                let advice = "";
+                
+                if (score <= 5) {
+                    report = currentLang === 'eng' ? "🟢 Zone 1: Safe & Balanced Mind" : "🟢 Vùng 1: Tâm lý An toàn & Thăng bằng";
+                    advice = currentLang === 'eng' 
+                        ? "Your scores indicate stable mental coping structures. Keep securing your sleep cycles and maintain your actual boundaries!"
+                        : "Chỉ số cho thấy bạn đang kiểm soát áp lực rất tốt. Hãy tiếp tục duy trì nhịp sinh học và lối sống lành mạnh này nhé!";
+                } else if (score <= 11) {
+                    report = currentLang === 'eng' ? "🟡 Zone 2: Moderate Exhaustion & Overload" : "🟡 Vùng 2: Quá tải & Kiệt sức Học đường Vừa phải";
+                    advice = currentLang === 'eng'
+                        ? "You are accumulating toxic academic exhaustion. We highly recommend activating the 4-7-8 breathing techniques in our Resource section and talking to our AI mentor."
+                        : "Tâm trí bạn đang tích tụ mệt mỏi quá tải. F-CARE khuyên bạn nên giảm bớt cường độ học thêm, thử tập các bài thở thư giãn ở mục Tài Nguyên.";
+                } else {
+                    report = currentLang === 'eng' ? "🔴 Zone 3: Severe Burnout & Anxiety Warning" : "🔴 Vùng 3: Báo động Khủng hoảng & Kiệt sức Nặng";
+                    advice = currentLang === 'eng'
+                        ? "High risk indices detected. Please immediately utilize the Crisis Support lines or book an urgent online diagnostic slot with our available therapists."
+                        : "Chỉ số kiệt sức và căng thẳng của bạn đã vượt ngưỡng an toàn. Đừng im lặng chịu đựng, hãy kết nối ngay với các bác sĩ ở mục Tìm Chuyên Gia để được hỗ trợ chuyên sâu.";
+                }
+                
+                container.innerHTML = `
+                    <div class="text-center py-4 space-y-3">
+                        <h4 class="text-base font-black text-[#FF6600] uppercase">${currentLang === 'eng' ? 'Your Diagnostics Result' : 'Kết Quả Đánh Giá Tâm Lý'}</h4>
+                        <p class="text-sm font-extrabold text-gray-800">${report}</p>
+                        <p class="text-xs text-gray-500 max-w-md mx-auto leading-relaxed font-medium">${advice}</p>
+                        <button onclick="currentQ=0; score=0; renderQuiz();" class="text-xs font-bold text-white bg-[#FF6600] px-5 py-2.5 rounded-full hover:bg-[#e05900] transition cursor-pointer">${currentLang === 'eng' ? 'Retake Quiz' : 'Thực hiện lại bài test'}</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            document.getElementById('q-progress').textContent = currentLang === 'eng' ? `Question ${currentQ+1}/6` : `Câu hỏi ${currentQ+1}/6`;
+            
+            let q = quizData[currentQ];
+            let optionsHTML = q.ops[currentLang].map((op, i) => `
+                <button onclick="score+=${i}; currentQ++; renderQuiz();" class="w-full text-left px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-semibold text-gray-600 hover:border-[#FF6600] hover:text-[#FF6600] hover:bg-[#FFF5EE]/30 transition cursor-pointer flex justify-between items-center group">
+                    <span>${op}</span>
+                    <span class="opacity-0 group-hover:opacity-100 text-[#FF6600] transition-opacity">➔</span>
+                </button>
+            `).join('');
+
+            container.innerHTML = `
+                <h4 class="text-sm font-bold text-gray-800 mb-3 leading-relaxed">${q[currentLang]}</h4>
+                <div class="space-y-2">${optionsHTML}</div>
+            `;
+        }
+    </script>
+</body>
+</html>
