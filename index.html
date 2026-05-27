@@ -295,10 +295,12 @@
             <div id="page-contact" class="page-content">
     <h2 class="text-gray-800 text-xl font-black uppercase mb-4" data-key="ct-title">Leave Your Message</h2>
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <form action="https://your-backend.com/contact" method="POST" class="lg:col-span-7 space-y-3 bg-gray-50 p-6 rounded-2xl border border-gray-100">
-            <input type="email" name="email" placeholder="Your Email address" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs outline-none focus:border-[#FF6600]" required>
+        <form id="contact-form" action="/api/contact" method="POST" class="lg:col-span-7 space-y-3 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+            <input type="hidden" name="_subject" value="New F-CARE contact message">
+            <input type="email" name="email" placeholder="Your Email address" autocomplete="email" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs outline-none focus:border-[#FF6600]" required>
             <textarea name="message" rows="4" placeholder="Share your feedback, struggles or questions here..." class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs outline-none focus:border-[#FF6600]" required></textarea>
-            <button type="submit" class="w-full bg-[#FF6600] text-white font-bold text-xs py-3 rounded-xl shadow-lg shadow-orange-500/10 cursor-pointer hover:bg-[#e05900] transition">Submit Message</button>
+            <button id="contact-submit" type="submit" class="w-full bg-[#FF6600] text-white font-bold text-xs py-3 rounded-xl shadow-lg shadow-orange-500/10 cursor-pointer hover:bg-[#e05900] transition">Submit Message</button>
+            <p id="contact-status" class="min-h-4 text-[11px] font-bold"></p>
         </form>
         <div class="lg:col-span-5 bg-[#FFF5EE]/60 border border-[#FF6600]/10 p-5 rounded-2xl text-xs space-y-3 text-gray-600 font-medium">
             <p class="font-bold text-gray-800 text-sm">💡 Quick Support Info</p>
@@ -352,6 +354,19 @@
             vie: {
                 bl1: "https://www.vinmec.com/vie/bai-viet/tac-hai-khi-tre-em-ngu-khong-du-giac-vi",
                 bl2: "https://www.vinmec.com/vie/bai-viet/chu-nghia-hoan-hao-6-hau-qua-can-luu-y-vi"
+            }
+        };
+
+        const contactMessages = {
+            eng: {
+                sending: "Sending your message...",
+                success: "Message sent. The F-CARE team will reply as soon as possible.",
+                error: "Could not send the message. Please try again in a moment."
+            },
+            vie: {
+                sending: "Đang gửi tin nhắn...",
+                success: "Đã gửi tin nhắn. F-CARE sẽ phản hồi bạn sớm nhất có thể.",
+                error: "Chưa gửi được tin nhắn. Vui lòng thử lại sau ít phút."
             }
         };
 
@@ -457,6 +472,7 @@
             renderCrisisGuides();
             updateResourceLinks();
             updateBlogLinks();
+            initContactForm();
         });
 
         // HÀM CHUYỂN TRANG MƯỢT MÀ (PAGE-TO-PAGE TRANSITION)
@@ -530,6 +546,49 @@
                 const blogId = link.getAttribute('data-blog-id');
                 const localizedUrl = blogLinks[currentLang][blogId];
                 if(localizedUrl) link.href = localizedUrl;
+            });
+        }
+
+        function initContactForm() {
+            const form = document.getElementById('contact-form');
+            const submitButton = document.getElementById('contact-submit');
+            const statusText = document.getElementById('contact-status');
+            if(!form || !submitButton || !statusText) return;
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                statusText.textContent = contactMessages[currentLang].sending;
+                statusText.className = "min-h-4 text-[11px] font-bold text-gray-500";
+                submitButton.disabled = true;
+                submitButton.classList.add('opacity-70', 'cursor-not-allowed');
+
+                try {
+                    const formData = new FormData(form);
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: formData.get('email'),
+                            message: formData.get('message'),
+                            _subject: formData.get('_subject')
+                        })
+                    });
+
+                    if(!response.ok) throw new Error('Contact form request failed');
+
+                    form.reset();
+                    statusText.textContent = contactMessages[currentLang].success;
+                    statusText.className = "min-h-4 text-[11px] font-bold text-green-600";
+                } catch (error) {
+                    statusText.textContent = contactMessages[currentLang].error;
+                    statusText.className = "min-h-4 text-[11px] font-bold text-red-600";
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('opacity-70', 'cursor-not-allowed');
+                }
             });
         }
 
